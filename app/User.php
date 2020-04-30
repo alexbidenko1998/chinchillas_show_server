@@ -32,6 +32,12 @@ use Laravel\Passport\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereTimestamp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereToken($value)
  * @mixin \Eloquent
+ * @property int $registrationDate
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
+ * @property-read int|null $clients_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRegistrationDate($value)
  */
 class User extends Authenticatable
 {

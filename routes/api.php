@@ -13,13 +13,20 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('cors')->group(function () {
-});
-
 Route::post('/register', 'PassportController@register');
 Route::post('/login', 'PassportController@login');
 
 Route::middleware('auth:api')->prefix('user')->group(function () {
 
     Route::get('/details', 'PassportController@details');
+
+    Route::get('/search', 'UsersController@searchUsers');
+});
+
+Route::middleware('auth:api')->prefix('chinchilla')->group(function () {
+
+    Route::post('/create', 'ChinchillasController@addChinchilla');
+    Route::post('/color/{chinchilla_id}', 'ChinchillasController@addColor');
+
+    Route::get('/get/{user_id}', 'ChinchillasController@getUserChinchillas');
 });
