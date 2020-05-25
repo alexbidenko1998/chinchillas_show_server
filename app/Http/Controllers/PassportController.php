@@ -11,15 +11,27 @@ class PassportController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'login' => 'required|min:3',
+            'login' => 'required|min:6',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
+            'phone' => 'required|string',
+            'firstName' => 'required|string',
+            'lastName' => 'required|string',
+            'patronymic' => 'required|string',
+            'country' => 'required|string',
+            'city' => 'required|string',
         ]);
 
         $user = User::create([
             'login' => $request->login,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
+            'phone' => $request->login,
+            'firstName' => $request->email,
+            'lastName' => $request->login,
+            'patronymic' => $request->email,
+            'country' => $request->login,
+            'city' => $request->email,
         ]);
 
         $token = $user->createToken('Chinchillas-Show')->accessToken;
@@ -33,7 +45,7 @@ class PassportController extends Controller
     public function login(Request $request)
     {
         $credentials = [
-            'email' => $request->email,
+            'login' => $request->login,
             'password' => $request->password
         ];
 
