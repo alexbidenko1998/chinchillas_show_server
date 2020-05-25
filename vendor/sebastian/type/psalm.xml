@@ -3,7 +3,7 @@
     totallyTyped="false"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config file:///home/hason/Projekty/github/commonmark-table-extension/vendor/vimeo/psalm/config.xsd"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
         <directory name="src" />
@@ -13,8 +13,7 @@
     </projectFiles>
 
     <issueHandlers>
-        <LessSpecificReturnType errorLevel="suppress" />
-        <LessSpecificImplementedReturnType errorLevel="suppress" />
+        <LessSpecificReturnType errorLevel="info" />
 
         <!-- level 3 issues - slightly lazy code writing, but provably low false-negatives -->
 
@@ -25,13 +24,17 @@
         <DeprecatedInterface errorLevel="info" />
         <DeprecatedTrait errorLevel="info" />
 
+        <InternalMethod errorLevel="info" />
+        <InternalProperty errorLevel="info" />
+        <InternalClass errorLevel="info" />
+
         <MissingClosureReturnType errorLevel="info" />
         <MissingReturnType errorLevel="info" />
-        <MissingPropertyType errorLevel="suppress" />
+        <MissingPropertyType errorLevel="info" />
         <InvalidDocblock errorLevel="info" />
         <MisplacedRequiredParam errorLevel="info" />
 
-        <PropertyNotSetInConstructor errorLevel="suppress" />
+        <PropertyNotSetInConstructor errorLevel="info" />
         <MissingConstructor errorLevel="info" />
         <MissingClosureParamType errorLevel="info" />
         <MissingParamType errorLevel="info" />
