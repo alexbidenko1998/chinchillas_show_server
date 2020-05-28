@@ -15,8 +15,8 @@ class PassportController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
             'phone' => 'required|string',
-            'firstName' => 'required|string',
-            'lastName' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'patronymic' => 'required|string',
             'country' => 'required|string',
             'city' => 'required|string',
@@ -27,11 +27,12 @@ class PassportController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'phone' => $request->login,
-            'firstName' => $request->email,
-            'lastName' => $request->login,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'patronymic' => $request->email,
             'country' => $request->login,
             'city' => $request->email,
+            'registration_date' => time() * 1000,
         ]);
 
         $token = $user->createToken('Chinchillas-Show')->accessToken;
