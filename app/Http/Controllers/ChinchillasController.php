@@ -28,7 +28,6 @@ class ChinchillasController extends Controller
 
     function addColor($chinchilla_id, Request $request) {
         $color = $request->validate([
-            'id' => ['numeric'],
             'standard' => ['string'],
             'white' => ['string'],
             'mosaic' => ['string'],
@@ -47,7 +46,11 @@ class ChinchillasController extends Controller
             'fur' => ['string'],
         ]);
         $color['chinchilla_id'] = $chinchilla_id;
-        return Color::updateOrCreate($color);
+        return Color::updateOrCreate(['chinchilla_id' => $chinchilla_id], $color);
+    }
+
+    function getChinchillaDetails($chinchilla_id) {
+        return Chinchilla::with('color')->find($chinchilla_id);
     }
 
     function getUserChinchillas($user_id) {

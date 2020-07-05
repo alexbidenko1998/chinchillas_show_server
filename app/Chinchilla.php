@@ -41,4 +41,9 @@ class Chinchilla extends Model
     ];
 
     public $timestamps = false;
+
+    public function color()
+    {
+        return $this->hasOne('App\Color');
+    }
 }
