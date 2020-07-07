@@ -37,7 +37,11 @@ use Illuminate\Database\Eloquent\Model;
 class Chinchilla extends Model
 {
     protected $fillable = [
-        'name', 'owner_id', 'status', 'is_ready', 'birthday', 'sex', 'breeder_id', 'weight', 'brothers', 'awards', 'description',
+        'name', 'owner_id', 'status', 'is_ready', 'birthday', 'sex', 'breeder_id', 'weight', 'brothers', 'awards', 'description', 'avatar',
+    ];
+
+    protected $hidden = [
+      'avatar_id',
     ];
 
     public $timestamps = false;
@@ -45,5 +49,15 @@ class Chinchilla extends Model
     public function color()
     {
         return $this->hasOne('App\Color');
+    }
+
+    public function avatar()
+    {
+        return $this->hasOne('App\ChinchillaPhoto', 'id', 'avatar_id');
+    }
+
+    public function photos()
+    {
+        return $this->hasMany('App\ChinchillaPhoto');
     }
 }

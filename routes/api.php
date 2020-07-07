@@ -33,3 +33,9 @@ Route::middleware('auth:api')->prefix('chinchilla')->group(function () {
   Route::get('/details/{chinchilla_id}', 'ChinchillasController@getChinchillaDetails');
   Route::get('/get/{user_id}', 'ChinchillasController@getUserChinchillas');
 });
+
+Route::middleware('auth:api')->prefix('photo')->group(function () {
+
+  Route::post('/chinchilla/{chinchilla_id}', 'PhotosController@upload');
+  Route::delete('/chinchilla/{photo_id}', 'PhotosController@delete');
+});

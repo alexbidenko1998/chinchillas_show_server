@@ -50,10 +50,10 @@ class ChinchillasController extends Controller
     }
 
     function getChinchillaDetails($chinchilla_id) {
-        return Chinchilla::with('color')->find($chinchilla_id);
+        return Chinchilla::with('color')->with('avatar')->with('photos')->find($chinchilla_id);
     }
 
     function getUserChinchillas($user_id) {
-        return Chinchilla::whereOwnerId($user_id)->get();
+        return Chinchilla::whereOwnerId($user_id)->with('avatar')->get();
     }
 }
