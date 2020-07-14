@@ -32,6 +32,8 @@ Route::middleware('auth:api')->prefix('chinchilla')->group(function () {
 
   Route::get('/details/{chinchilla_id}', 'ChinchillasController@getChinchillaDetails');
   Route::get('/get/{user_id}', 'ChinchillasController@getUserChinchillas');
+
+  Route::get('/search', 'ChinchillasController@searchChinchillas');
 });
 
 Route::middleware('auth:api')->prefix('photo')->group(function () {

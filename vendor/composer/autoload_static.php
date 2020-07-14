@@ -590,12 +590,14 @@ class ComposerStaticInit00de489524a49dd5339a65172170d797
 
     public static $classMap = array (
         'App\\Chinchilla' => __DIR__ . '/../..' . '/app/Chinchilla.php',
+        'App\\ChinchillaPhoto' => __DIR__ . '/../..' . '/app/ChinchillaPhoto.php',
         'App\\Color' => __DIR__ . '/../..' . '/app/Color.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\ChinchillasController' => __DIR__ . '/../..' . '/app/Http/Controllers/ChinchillasController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\PassportController' => __DIR__ . '/../..' . '/app/Http/Controllers/PassportController.php',
+        'App\\Http\\Controllers\\PhotosController' => __DIR__ . '/../..' . '/app/Http/Controllers/PhotosController.php',
         'App\\Http\\Controllers\\UsersController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsersController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',

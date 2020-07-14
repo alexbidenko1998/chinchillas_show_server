@@ -26,12 +26,12 @@ class PassportController extends Controller
             'login' => $request->login,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'phone' => $request->login,
+            'phone' => $request->phone,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'patronymic' => $request->email,
-            'country' => $request->login,
-            'city' => $request->email,
+            'patronymic' => $request->patronymic,
+            'country' => $request->country,
+            'city' => $request->city,
             'registration_date' => time() * 1000,
         ]);
 

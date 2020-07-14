@@ -17,10 +17,10 @@ class ChinchillasController extends Controller
             'birthday' => ['required', 'numeric'],
             'sex' => ['required', 'string'],
             'breeder_id' => ['sometimes', 'numeric', 'exists:users,id'],
-            'weight' => ['sometimes', 'string'],
-            'brothers' => ['sometimes', 'string'],
-            'awards' => ['sometimes', 'string'],
-            'description' => ['sometimes', 'string'],
+            'weight' => ['sometimes', 'nullable', 'string'],
+            'brothers' => ['sometimes', 'nullable', 'string'],
+            'awards' => ['sometimes', 'nullable', 'string'],
+            'description' => ['sometimes', 'nullable', 'string'],
         ]);
         $chinchilla['owner_id'] = $request->user()->id;
         return Chinchilla::create($chinchilla);
@@ -55,5 +55,9 @@ class ChinchillasController extends Controller
 
     function getUserChinchillas($user_id) {
         return Chinchilla::whereOwnerId($user_id)->with('avatar')->get();
+    }
+
+    function searchChinchillas() {
+        return Chinchilla::with('avatar')->get();
     }
 }
