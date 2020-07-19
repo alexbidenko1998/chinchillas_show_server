@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Chinchilla;
 use App\Color;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ChinchillasController extends Controller
 {
@@ -17,6 +18,8 @@ class ChinchillasController extends Controller
             'birthday' => ['required', 'numeric'],
             'sex' => ['required', 'string'],
             'breeder_id' => ['sometimes', 'numeric', 'exists:users,id'],
+            'mother_id' => ['sometimes', 'numeric', 'exists:chinchillas,id'],
+            'father_id' => ['sometimes', 'numeric', 'exists:chinchillas,id'],
             'weight' => ['sometimes', 'nullable', 'string'],
             'brothers' => ['sometimes', 'nullable', 'string'],
             'awards' => ['sometimes', 'nullable', 'string'],
@@ -24,6 +27,25 @@ class ChinchillasController extends Controller
         ]);
         $chinchilla['owner_id'] = $request->user()->id;
         return Chinchilla::create($chinchilla);
+    }
+
+    function updateChinchilla($chinchilla_id, Request $request) {
+        $data = $request->validate([
+            'name' => ['sometimes', 'nullable', 'string'],
+            'status' => ['sometimes', 'nullable', 'string'],
+            'is_ready' => ['sometimes', 'nullable', 'boolean'],
+            'birthday' => ['sometimes', 'nullable', 'numeric'],
+            'sex' => ['sometimes', 'nullable', 'string'],
+            'breeder_id' => ['sometimes', 'numeric', 'exists:users,id'],
+            'mother_id' => ['sometimes', 'nullable', 'numeric', 'exists:chinchillas,id'],
+            'father_id' => ['sometimes', 'nullable', 'numeric', 'exists:chinchillas,id'],
+            'avatar_id' => ['sometimes', 'nullable', 'numeric', 'exists:chinchilla_photos,id'],
+            'weight' => ['sometimes', 'nullable', 'string'],
+            'brothers' => ['sometimes', 'nullable', 'string'],
+            'awards' => ['sometimes', 'nullable', 'string'],
+            'description' => ['sometimes', 'nullable', 'string'],
+        ]);
+        Chinchilla::whereId($chinchilla_id)->update($data);
     }
 
     function addColor($chinchilla_id, Request $request) {
@@ -57,7 +79,11 @@ class ChinchillasController extends Controller
         return Chinchilla::whereOwnerId($user_id)->with('avatar')->get();
     }
 
-    function searchChinchillas() {
-        return Chinchilla::with('avatar')->get();
+    function searchChinchillas(Request $request) {
+        $search = Chinchilla::with('avatar');
+        foreach ($request->all() as $key => $value) {
+            $search = $search->where($key, 'like', "%{$value}%");
+        }
+        return $search->get();
     }
 }
