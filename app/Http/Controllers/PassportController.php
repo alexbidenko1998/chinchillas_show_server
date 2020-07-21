@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Storage;
 use Lcobucci\JWT\Parser;
+use Str;
 
 class PassportController extends Controller
 {
@@ -74,5 +76,32 @@ class PassportController extends Controller
         $token = $request->user()->tokens->find($id);
         $token->revoke();
         return response('You have been successfully logged out!', 200);
+    }
+
+    public function update(Request $request)
+    {
+        $data = $request->validate([
+            'avatar' => ['sometimes', 'nullable', 'file', 'dimensions:max_width=1024,max_height=1024', 'mimetypes:image/*'],
+            'first_name' => ['sometimes', 'nullable', 'string'],
+            'last_name' => ['sometimes', 'nullable', 'string'],
+            'patronymic' => ['sometimes', 'nullable', 'string'],
+            'country' => ['sometimes', 'nullable', 'string'],
+            'city' => ['sometimes', 'nullable', 'string'],
+        ]);
+
+        if (isset($data['avatar'])) {
+            $filename = time() . '_' . Str::random() . '.' . $request->file('avatar')->getClientOriginalExtension();
+            $request->file('avatar')->storeAs('users/' . auth()->user()->id . '/', $filename, 'public_photos');
+            $data['avatar'] = $filename;
+        }
+
+        $user = User::find(auth()->user()->id);
+        if ($user->avatar)
+            Storage::disk('public_photos')->delete('users/' . auth()->user()->id . '/' . $user->avatar);
+        foreach ($data as $key => $value) {
+            $user->{$key} = $value;
+        }
+        $user->save();
+        return $user;
     }
 }

@@ -61,7 +61,7 @@
             "@php artisan key:generate --ansi"
         ],
         "deploy": [
-            "rsync -e 'sshpass -p Q!3Hb4c3 ssh' -avzP --exclude=public/photos/* --exclude=storage/framework/cache/* --delete-after ./ u0690120@37.140.192.11:~/www/api.chinchillas-show.com"
+            "rsync -e 'sshpass -p Q!3Hb4c3 ssh' -avzP --exclude=public/photos/* --exclude=storage/framework/* --exclude=.git --delete-after ./ u0690120@37.140.192.11:~/www/api.chinchillas-show.com"
         ]
     }
 }
