@@ -46,6 +46,8 @@ class Chinchilla extends Model
 
     public $timestamps = false;
 
+    private $parentCount = 0;
+
     public function color()
     {
         return $this->hasOne('App\Color');
@@ -59,5 +61,28 @@ class Chinchilla extends Model
     public function photos()
     {
         return $this->hasMany('App\ChinchillaPhoto');
+    }
+
+    public function getChildrenAttribute() {
+        return Chinchilla::with('avatar')
+            ->where('father_id', $this->id)->orWhere('mother_id', $this->id)->get();
+    }
+
+    public function getMotherAttribute() {
+        $chinchilla = Chinchilla::with('avatar')->find($this->mother_id);
+        if (isset($chinchilla)) $chinchilla->withParents($this->parentCount);
+        return $chinchilla;
+    }
+
+    public function getFatherAttribute() {
+        $chinchilla = Chinchilla::with('avatar')->find($this->father_id);
+        if (isset($chinchilla)) $chinchilla->withParents($this->parentCount);
+        return $chinchilla;
+    }
+
+    public function withParents($parentCount = 0) {
+        $this->parentCount = $parentCount + 1;
+        if ($this->parentCount < 4) $this->append(['mother', 'father']);
+        return $this;
     }
 }

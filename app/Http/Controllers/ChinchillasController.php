@@ -72,18 +72,34 @@ class ChinchillasController extends Controller
     }
 
     function getChinchillaDetails($chinchilla_id) {
-        return Chinchilla::with('color')->with('avatar')->with('photos')->find($chinchilla_id);
+        return Chinchilla::with('color')
+            ->with('avatar')
+            ->with('photos')
+            ->find($chinchilla_id)
+            ->append('children')
+            ->withParents();
     }
 
     function getUserChinchillas($user_id) {
-        return Chinchilla::whereOwnerId($user_id)->with('avatar')->get();
+        return Chinchilla::whereOwnerId($user_id)->with('color')->with('avatar')->get();
     }
 
     function searchChinchillas(Request $request) {
-        $search = Chinchilla::with('avatar');
-        foreach ($request->all() as $key => $value) {
+        $search = Chinchilla::with('color')->with('avatar');
+        $params = $request->all();
+        if (isset($params['page'])) $page = $params['page'];
+        if (isset($params['perPage'])) $perPage = $params['perPage'];
+        unset($params['page']);
+        unset($params['perPage']);
+        foreach ($params as $key => $value) {
             $search = $search->where($key, 'like', "%{$value}%");
         }
-        return $search->get();
+        if (isset($page) && isset($perPage)) {
+            $search = $search->forPage($params['page'], $params['perPage']);
+        }
+        return response()->json([
+            'data' => $search->get(),
+            'total' => $search->count(),
+        ]);
     }
 }
