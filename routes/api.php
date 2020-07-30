@@ -31,6 +31,7 @@ Route::middleware('auth:api')->prefix('chinchilla')->group(function () {
   Route::post('/create', 'ChinchillasController@addChinchilla');
   Route::post('/color/{chinchilla_id}', 'ChinchillasController@addColor');
   Route::put('/update/{chinchilla_id}', 'ChinchillasController@updateChinchilla');
+  Route::post('/create/status', 'ChinchillasController@createStatus');
 
   Route::get('/details/{chinchilla_id}', 'ChinchillasController@getChinchillaDetails');
   Route::get('/get/{user_id}', 'ChinchillasController@getUserChinchillas');

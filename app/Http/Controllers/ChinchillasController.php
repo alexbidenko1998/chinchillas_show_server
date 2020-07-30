@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Chinchilla;
 use App\Color;
+use App\Status;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class ChinchillasController extends Controller
 {
@@ -26,13 +26,18 @@ class ChinchillasController extends Controller
             'description' => ['sometimes', 'nullable', 'string'],
         ]);
         $chinchilla['owner_id'] = $request->user()->id;
+        $status = $chinchilla['status'];
+        unset($chinchilla['status']);
+        Status::create([
+            'name' => $status,
+            'timestamp' => time() * 1000,
+        ]);
         return Chinchilla::create($chinchilla);
     }
 
     function updateChinchilla($chinchilla_id, Request $request) {
         $data = $request->validate([
             'name' => ['sometimes', 'nullable', 'string'],
-            'status' => ['sometimes', 'nullable', 'string'],
             'is_ready' => ['sometimes', 'nullable', 'boolean'],
             'birthday' => ['sometimes', 'nullable', 'numeric'],
             'sex' => ['sometimes', 'nullable', 'string'],
@@ -75,6 +80,7 @@ class ChinchillasController extends Controller
         return Chinchilla::with('color')
             ->with('avatar')
             ->with('photos')
+            ->with('statuses')
             ->find($chinchilla_id)
             ->append('children')
             ->withParents();
@@ -100,6 +106,18 @@ class ChinchillasController extends Controller
         return response()->json([
             'data' => $search->get(),
             'total' => $search->count(),
+        ]);
+    }
+
+    function createStatus(Request $request) {
+        $request->validate([
+            'name' => ['required', 'string'],
+            'chinchillaId' => ['required', 'exists:chinchillas,id'],
+        ]);
+        return Status::create([
+            'name' => $request->name,
+            'timestamp' => time() * 1000,
+            'chinchilla_id' => $request->chinchillaId,
         ]);
     }
 }

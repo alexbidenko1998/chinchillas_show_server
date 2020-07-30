@@ -85,4 +85,8 @@ class Chinchilla extends Model
         if ($this->parentCount < 4) $this->append(['mother', 'father']);
         return $this;
     }
+
+    public function statuses() {
+        return $this->hasMany('App\Status', 'chinchilla_id', 'id')->orderBy('timestamp', 'desc');
+    }
 }
