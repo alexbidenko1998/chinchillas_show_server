@@ -24,4 +24,4 @@ jobs:
           with:
             php-version: '7.2'
       -   name: Deploy
-          run: composer run-script deploy
+          run: rsync -e 'sshpass -p _4aKgQ6N ssh' -avzP --exclude=public/photos/* --exclude=storage/framework/* --exclude=.git --delete-after ./ u0690120@37.140.192.11:~/www/api.chinchillas-show.com
