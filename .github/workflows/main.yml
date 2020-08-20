@@ -17,7 +17,7 @@ jobs:
         run: |
             sudo apt-get install -y rsync sshpass
             mkdir -p ~/.ssh/
-            echo "${{secrets.HOST}}" > ~/.ssh/known_hosts
+            echo "37.140.192.11" > ~/.ssh/known_hosts
             echo -e 'Host *\n\tStrictHostKeyChecking no\n\n' > ~/.ssh/config
       -   name: Setup Enviroment
           uses: shivammathur/setup-php@v2
