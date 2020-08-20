@@ -6,12 +6,14 @@ use App\Chinchilla;
 use App\Color;
 use App\Status;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class ChinchillasController extends Controller
 {
 
     function addChinchilla(Request $request) {
-        $chinchilla = $request->validate([
+        $data = $request->validate([
             'name' => ['required', 'string'],
             'status' => ['required', 'string'],
             'is_ready' => ['required', 'boolean'],
@@ -25,14 +27,19 @@ class ChinchillasController extends Controller
             'awards' => ['sometimes', 'nullable', 'string'],
             'description' => ['sometimes', 'nullable', 'string'],
         ]);
-        $chinchilla['owner_id'] = $request->user()->id;
-        $status = $chinchilla['status'];
-        unset($chinchilla['status']);
+        $data['owner_id'] = $request->user()->id;
+        $status = $data['status'];
+        unset($data['status']);
+        $chinchilla = Chinchilla::create($data);
         Status::create([
             'name' => $status,
             'timestamp' => time() * 1000,
+            'chinchilla_id' => $chinchilla->id,
         ]);
-        return Chinchilla::create($chinchilla);
+        Color::create([
+            'chinchilla_id' => $chinchilla->id,
+        ]);
+        return $chinchilla;
     }
 
     function updateChinchilla($chinchilla_id, Request $request) {
@@ -41,7 +48,7 @@ class ChinchillasController extends Controller
             'is_ready' => ['sometimes', 'nullable', 'boolean'],
             'birthday' => ['sometimes', 'nullable', 'numeric'],
             'sex' => ['sometimes', 'nullable', 'string'],
-            'breeder_id' => ['sometimes', 'numeric', 'exists:users,id'],
+            'breeder_id' => ['sometimes', 'nullable',  'numeric', 'exists:users,id'],
             'mother_id' => ['sometimes', 'nullable', 'numeric', 'exists:chinchillas,id'],
             'father_id' => ['sometimes', 'nullable', 'numeric', 'exists:chinchillas,id'],
             'avatar_id' => ['sometimes', 'nullable', 'numeric', 'exists:chinchilla_photos,id'],
@@ -81,13 +88,18 @@ class ChinchillasController extends Controller
             ->with('avatar')
             ->with('photos')
             ->with('statuses')
+            ->with('colorComments')
+            ->with('owner')
             ->find($chinchilla_id)
             ->append('children')
+            ->append('relatives')
             ->withParents();
     }
 
-    function getUserChinchillas($user_id) {
-        return Chinchilla::whereOwnerId($user_id)->with('color')->with('avatar')->get();
+    function getUserChinchillas($user_id, Request $request) {
+        $query = Chinchilla::whereOwnerId($user_id)->with('color')->with('avatar')->with('status');
+        if ($user_id != $request->user()->id) $query = $query->where('conclusion', '<>', 'not_check');
+        return $query->get();
     }
 
     function searchChinchillas(Request $request) {
@@ -100,6 +112,9 @@ class ChinchillasController extends Controller
         foreach ($params as $key => $value) {
             $search = $search->where($key, 'like', "%{$value}%");
         }
+        $search = $search->where(function ($query) use ($request) {
+            $query->orWhere('conclusion', '<>', 'not_check')->orWhere('owner_id', $request->user()->id);
+        });
         if (isset($page) && isset($perPage)) {
             $search = $search->forPage($params['page'], $params['perPage']);
         }
@@ -119,5 +134,13 @@ class ChinchillasController extends Controller
             'timestamp' => time() * 1000,
             'chinchilla_id' => $request->chinchillaId,
         ]);
+    }
+
+    function colorForOvervalue($id, Request $request) {
+        $chinchilla = Chinchilla::findOrFail($id);
+        if ($chinchilla->owner_id != $request->user()->id) abort(Response::HTTP_FORBIDDEN);
+        $chinchilla->conclusion = 'overvalue';
+        $chinchilla->save();
+        return $chinchilla;
     }
 }

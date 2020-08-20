@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Http\Request;
 
 /*
@@ -29,6 +30,7 @@ Route::middleware('auth:api')->prefix('user')->group(function () {
 Route::middleware('auth:api')->prefix('chinchilla')->group(function () {
 
   Route::post('/create', 'ChinchillasController@addChinchilla');
+  Route::post('/color/for-overvalue/{id}', 'ChinchillasController@colorForOvervalue');
   Route::post('/color/{chinchilla_id}', 'ChinchillasController@addColor');
   Route::put('/update/{chinchilla_id}', 'ChinchillasController@updateChinchilla');
   Route::post('/create/status', 'ChinchillasController@createStatus');
@@ -43,4 +45,15 @@ Route::middleware('auth:api')->prefix('photo')->group(function () {
 
   Route::post('/chinchilla/{chinchilla_id}', 'PhotosController@upload');
   Route::delete('/chinchilla/{photo_id}', 'PhotosController@delete');
+});
+
+Route::middleware(['auth:api', AdminMiddleware::class])->prefix('admin')->group(function () {
+
+    Route::get('/users', 'AdminController@getUsers');
+    Route::put('/user/{id}', 'AdminController@updateUser');
+
+    Route::get('/chinchillas/{page}/{perPage}', 'AdminController@getChinchillas');
+    Route::put('/chinchilla/{id}', 'AdminController@updateChinchilla');
+
+    Route::post('/color/comment', 'AdminController@createColorComment');
 });

@@ -81,7 +81,7 @@ class PassportController extends Controller
     public function update(Request $request)
     {
         $data = $request->validate([
-            'avatar' => ['sometimes', 'nullable', 'file', 'dimensions:max_width=1024,max_height=1024', 'mimetypes:image/*'],
+            'avatar' => ['sometimes', 'nullable', 'file', 'mimetypes:image/*'],
             'first_name' => ['sometimes', 'nullable', 'string'],
             'last_name' => ['sometimes', 'nullable', 'string'],
             'patronymic' => ['sometimes', 'nullable', 'string'],

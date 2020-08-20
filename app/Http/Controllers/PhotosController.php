@@ -17,7 +17,7 @@ class PhotosController extends Controller
         });
 
         $request->validate([
-            'photo' => ['required', 'file', 'dimensions:max_width=1024,max_height=1024', 'mimetypes:image/*'],
+            'photo' => ['required', 'file', 'dimensions:max_width=4096,max_height=4096', 'mimetypes:image/*'],
         ]);
 
         $filename = time() . '_' . Str::random() . '.' . $request->file('photo')->getClientOriginalExtension();
@@ -37,6 +37,11 @@ class PhotosController extends Controller
 
         Storage::disk('public_photos')->delete('chinchillas/' . $chinchilla->owner_id . '/' . $chinchilla->id . '/' . $photo->name);
         $photo->forceDelete();
+
+        if ($chinchilla->avatar_id == $photo_id) {
+            $chinchilla->avatar_id = null;
+            $chinchilla->save();
+        }
 
         return Response::HTTP_OK;
     }
