@@ -38,6 +38,21 @@ use Laravel\Passport\HasApiTokens;
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Token[] $tokens
  * @property-read int|null $tokens_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereRegistrationDate($value)
+ * @property int $registration_date
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $patronymic
+ * @property string|null $city
+ * @property string|null $country
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCity($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereCountry($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User wherePatronymic($value)
+ * @property string $type
+ * @property int $admitted
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereAdmitted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\User whereType($value)
  */
 class User extends Authenticatable
 {
@@ -46,7 +61,8 @@ class User extends Authenticatable
     protected $table = 'users';
 
     protected $fillable = [
-        'login', 'email', 'password', 'phone', 'firstName', 'lastName', 'patronymic', 'country', 'city',
+        'login', 'email', 'password', 'phone', 'first_name', 'last_name', 'patronymic',
+        'country', 'city', 'registration_date', 'type', 'admitted'
     ];
 
     protected $hidden = [

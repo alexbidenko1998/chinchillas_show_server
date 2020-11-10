@@ -2,29 +2,26 @@ name: Build and Deploy
 on:
   push:
     branches:
-      -   master
+      -   dev
 
 jobs:
   build:
     name: Build and Deploy
     runs-on: ubuntu-latest
     steps:
-      -   name: Checkout Repository
-          uses: actions/checkout@master
+      - name: Checkout Repository
+        uses: actions/checkout@master
+        with:
+            ref: master
+      - name: Create SSH key
+        run: |
+            sudo apt-get install -y rsync sshpass
+            mkdir -p ~/.ssh/
+            echo "37.140.192.11" > ~/.ssh/known_hosts
+            echo -e 'Host *\n\tStrictHostKeyChecking no\n\n' > ~/.ssh/config
       -   name: Setup Enviroment
           uses: shivammathur/setup-php@v2
           with:
             php-version: '7.2'
-      -   name: Speed up the packages installation process
-          run: composer global require hirak/prestissimo
-      -   name: Install Packages
-          run: composer install --no-dev
-      -   name: Deploy to Server
-          uses: ngocquyhoang/deploy@laravel
-          with:
-            user: u0690120
-            host: 37.140.192.11
-            path: /var/www/u0690120/data/www/api.chinchillas-show.com
-            owner: u0690120
-          env:
-            DEPLOY_KEY: Q!3Hb4c3
+      -   name: Deploy
+          run: rsync -e 'sshpass -p _4aKgQ6N ssh' -avzP --exclude=public/photos/* --exclude=storage/framework/* --exclude=.git --delete-after ./ u0690120@37.140.192.11:~/www/api.chinchillas-show.com
