@@ -104,4 +104,11 @@ class PassportController extends Controller
         $user->save();
         return $user;
     }
+
+    function resetPassword($email, Request $request) {
+        User::whereEmail($email)->update([
+            'password' => bcrypt($request->password),
+        ]);
+        return true;
+    }
 }
