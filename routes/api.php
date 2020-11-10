@@ -27,18 +27,21 @@ Route::middleware('auth:api')->prefix('user')->group(function () {
   Route::get('/search', 'UsersController@searchUsers');
 });
 
-Route::middleware('auth:api')->prefix('chinchilla')->group(function () {
+Route::prefix('chinchilla')->group(function () {
+    Route::middleware('auth:api')->group(function () {
 
-  Route::post('/create', 'ChinchillasController@addChinchilla');
-  Route::post('/color/for-overvalue/{id}', 'ChinchillasController@colorForOvervalue');
-  Route::post('/color/{chinchilla_id}', 'ChinchillasController@addColor');
-  Route::put('/update/{chinchilla_id}', 'ChinchillasController@updateChinchilla');
-  Route::post('/create/status', 'ChinchillasController@createStatus');
+        Route::post('/create', 'ChinchillasController@addChinchilla');
+        Route::post('/color/for-overvalue/{id}', 'ChinchillasController@colorForOvervalue');
+        Route::post('/color/{chinchilla_id}', 'ChinchillasController@addColor');
+        Route::put('/update/{chinchilla_id}', 'ChinchillasController@updateChinchilla');
+        Route::post('/create/status', 'ChinchillasController@createStatus');
 
-  Route::get('/details/{chinchilla_id}', 'ChinchillasController@getChinchillaDetails');
-  Route::get('/get/{user_id}', 'ChinchillasController@getUserChinchillas');
+        Route::get('/get/{user_id}', 'ChinchillasController@getUserChinchillas');
+    });
 
-  Route::get('/search', 'ChinchillasController@searchChinchillas');
+    Route::get('/details/{chinchilla_id}', 'ChinchillasController@getChinchillaDetails');
+
+    Route::get('/search', 'ChinchillasController@searchChinchillas');
 });
 
 Route::middleware('auth:api')->prefix('photo')->group(function () {

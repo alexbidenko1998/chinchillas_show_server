@@ -7,7 +7,6 @@ use App\Color;
 use App\Status;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
 
 class ChinchillasController extends Controller
 {
@@ -89,7 +88,7 @@ class ChinchillasController extends Controller
             ->with('photos')
             ->with('statuses')
             ->with('colorComments')
-            ->with('owner')
+            ->with(request()->header('Country-Code') == 'RU' ? 'owner' : 'owner:id')
             ->find($chinchilla_id)
             ->append('children')
             ->append('relatives')
@@ -113,7 +112,9 @@ class ChinchillasController extends Controller
             $search = $search->where($key, 'like', "%{$value}%");
         }
         $search = $search->where(function ($query) use ($request) {
-            $query->orWhere('conclusion', '<>', 'not_check')->orWhere('owner_id', $request->user()->id);
+            $query->orWhere('conclusion', '<>', 'not_check')->orWhere(function ($q) use ($request) {
+                if ($request->user() !== null) $q->orWhere('owner_id', $request->user()->id);
+            });
         });
         if (isset($page) && isset($perPage)) {
             $search = $search->forPage($params['page'], $params['perPage']);

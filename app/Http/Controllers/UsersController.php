@@ -16,7 +16,7 @@ class UsersController extends Controller
     $searcher = User::query();
     if ($request->query('login')) $searcher->where('login', 'like', $request->query('login'));
     if ($perPage == 0) return $searcher->get();
-    return $searcher->forPage($page, $perPage);
+    return $searcher->forPage($page, $perPage)->get();
   }
 
   public function details($userId)
