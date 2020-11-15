@@ -17,11 +17,11 @@ jobs:
         run: |
             sudo apt-get install -y rsync sshpass
             mkdir -p ~/.ssh/
-            echo "37.140.192.11" > ~/.ssh/known_hosts
+            echo "${{secrets.SSH_HOST}}" > ~/.ssh/known_hosts
             echo -e 'Host *\n\tStrictHostKeyChecking no\n\n' > ~/.ssh/config
       -   name: Setup Enviroment
           uses: shivammathur/setup-php@v2
           with:
             php-version: '7.2'
       -   name: Deploy
-          run: rsync -e 'sshpass -p _4aKgQ6N ssh' -avzP --exclude=public/photos/* --exclude=storage/framework/* --exclude=.git --delete-after ./ u0690120@37.140.192.11:~/www/api.chinchillas-show.com
+          run: rsync -e 'sshpass -p ${{secrets.SSH_PASSWORD}} ssh' -avzP --exclude=public/photos/* --exclude=storage/framework/* --exclude=.git --delete-after ./ ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}}:~/www/api.chinchillas-show.com

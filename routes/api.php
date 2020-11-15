@@ -61,4 +61,8 @@ Route::middleware(['auth:api', AdminMiddleware::class])->prefix('admin')->group(
     Route::post('/color/comment', 'AdminController@createColorComment');
 });
 
-Route::get('/reset/{email}', 'PassportController@resetPassword');
+Route::prefix('site')->group(function () {
+    Route::get('/statistics', 'SiteController@statistics');
+});
+
+// Route::get('/reset/{email}', 'PassportController@resetPassword');

@@ -106,16 +106,18 @@ class ChinchillasController extends Controller
         $params = $request->all();
         if (isset($params['page'])) $page = $params['page'];
         if (isset($params['perPage'])) $perPage = $params['perPage'];
+        if (isset($params['is_owner'])) $isOwner = $params['is_owner'];
         unset($params['page']);
         unset($params['perPage']);
+        unset($params['is_owner']);
         foreach ($params as $key => $value) {
             $search = $search->where($key, 'like', "%{$value}%");
         }
-        $search = $search->where(function ($query) use ($request) {
-            $query->orWhere('conclusion', '<>', 'not_check')->orWhere(function ($q) use ($request) {
-                if ($request->user() !== null) $q->orWhere('owner_id', $request->user()->id);
-            });
-        });
+        if (isset($isOwner) && $request->user('api') !== null) {
+            $search = $search->where('owner_id', $request->user('api')->id);
+        } else {
+            $search = $search->where('conclusion', '<>', 'not_check');
+        }
         if (isset($page) && isset($perPage)) {
             $search = $search->forPage($params['page'], $params['perPage']);
         }
