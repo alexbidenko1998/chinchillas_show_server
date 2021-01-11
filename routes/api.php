@@ -65,4 +65,4 @@ Route::prefix('site')->group(function () {
     Route::get('/statistics', 'SiteController@statistics');
 });
 
-// Route::get('/reset/{email}', 'PassportController@resetPassword');
+Route::get('/reset/{email}', 'PassportController@resetPassword');

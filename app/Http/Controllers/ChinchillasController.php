@@ -11,7 +11,8 @@ use Illuminate\Http\Response;
 class ChinchillasController extends Controller
 {
 
-    function addChinchilla(Request $request) {
+    public function addChinchilla(Request $request)
+    {
         $data = $request->validate([
             'name' => ['required', 'string'],
             'status' => ['required', 'string'],
@@ -41,7 +42,8 @@ class ChinchillasController extends Controller
         return $chinchilla;
     }
 
-    function updateChinchilla($chinchilla_id, Request $request) {
+    public function updateChinchilla($chinchilla_id, Request $request)
+    {
         $data = $request->validate([
             'name' => ['sometimes', 'nullable', 'string'],
             'is_ready' => ['sometimes', 'nullable', 'boolean'],
@@ -59,7 +61,8 @@ class ChinchillasController extends Controller
         Chinchilla::whereId($chinchilla_id)->update($data);
     }
 
-    function addColor($chinchilla_id, Request $request) {
+    public function addColor($chinchilla_id, Request $request)
+    {
         $color = $request->validate([
             'standard' => ['string'],
             'white' => ['string'],
@@ -82,7 +85,8 @@ class ChinchillasController extends Controller
         return Color::updateOrCreate(['chinchilla_id' => $chinchilla_id], $color);
     }
 
-    function getChinchillaDetails($chinchilla_id) {
+    public function getChinchillaDetails($chinchilla_id)
+    {
         return Chinchilla::with('color')
             ->with('avatar')
             ->with('photos')
@@ -95,18 +99,28 @@ class ChinchillasController extends Controller
             ->withParents();
     }
 
-    function getUserChinchillas($user_id, Request $request) {
+    public function getUserChinchillas($user_id, Request $request)
+    {
         $query = Chinchilla::whereOwnerId($user_id)->with('color')->with('avatar')->with('status');
-        if ($user_id != $request->user()->id) $query = $query->where('conclusion', '<>', 'not_check');
+        if ($user_id != $request->user()->id) {
+            $query = $query->where('conclusion', '<>', 'not_check');
+        }
         return $query->get();
     }
 
-    function searchChinchillas(Request $request) {
-        $search = Chinchilla::with('color')->with('avatar');
+    public function searchChinchillas(Request $request)
+    {
+        $search = Chinchilla::with('color')->with('avatar')->with('status');
         $params = $request->all();
-        if (isset($params['page'])) $page = $params['page'];
-        if (isset($params['perPage'])) $perPage = $params['perPage'];
-        if (isset($params['is_owner'])) $isOwner = $params['is_owner'];
+        if (isset($params['page'])) {
+            $page = $params['page'];
+        }
+        if (isset($params['perPage'])) {
+            $perPage = $params['perPage'];
+        }
+        if (isset($params['is_owner'])) {
+            $isOwner = $params['is_owner'];
+        }
         unset($params['page']);
         unset($params['perPage']);
         unset($params['is_owner']);
@@ -118,6 +132,11 @@ class ChinchillasController extends Controller
         } else {
             $search = $search->where('conclusion', '<>', 'not_check');
         }
+        if ($request->user('api') === null) {
+            $search = $search->whereHas('statuses', function ($query) {
+                $query->where('statuses.name', 'sale');
+            });
+        }
         if (isset($page) && isset($perPage)) {
             $search = $search->forPage($params['page'], $params['perPage']);
         }
@@ -127,7 +146,8 @@ class ChinchillasController extends Controller
         ]);
     }
 
-    function createStatus(Request $request) {
+    public function createStatus(Request $request)
+    {
         $request->validate([
             'name' => ['required', 'string'],
             'chinchillaId' => ['required', 'exists:chinchillas,id'],
@@ -139,9 +159,12 @@ class ChinchillasController extends Controller
         ]);
     }
 
-    function colorForOvervalue($id, Request $request) {
+    public function colorForOvervalue($id, Request $request)
+    {
         $chinchilla = Chinchilla::findOrFail($id);
-        if ($chinchilla->owner_id != $request->user()->id) abort(Response::HTTP_FORBIDDEN);
+        if ($chinchilla->owner_id != $request->user()->id) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
         $chinchilla->conclusion = 'overvalue';
         $chinchilla->save();
         return $chinchilla;
