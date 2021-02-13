@@ -100,7 +100,7 @@ class ChinchillasController extends Controller
             ->append('children')
             ->append('relatives')
             ->withParents();
-        $chinchilla->breeder->makeHidden(['email', 'phone']);
+        if (!is_null($chinchilla->breeder)) $chinchilla->breeder->makeHidden(['email', 'phone']);
         return $chinchilla;
     }
 
