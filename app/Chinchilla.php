@@ -59,7 +59,8 @@ use Illuminate\Database\Eloquent\Model;
 class Chinchilla extends Model
 {
     protected $fillable = [
-        'name', 'owner_id', 'status', 'is_ready', 'birthday', 'sex', 'breeder_id', 'weight', 'brothers',
+        'name', 'owner_id', 'status', 'is_ready', 'birthday', 'sex',
+        'breeder_id', 'breeder_type', 'weight', 'brothers',
         'awards', 'description', 'avatar', 'conclusion',
     ];
 

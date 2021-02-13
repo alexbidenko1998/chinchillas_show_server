@@ -17,14 +17,15 @@ use Illuminate\Http\Request;
 Route::post('/register', 'PassportController@register');
 Route::post('/login', 'PassportController@login');
 
-Route::middleware('auth:api')->prefix('user')->group(function () {
+Route::prefix('user')->group(function () {
+    Route::middleware('auth:api')->group(function () {
+        Route::get('/details/{userId}', 'UsersController@details');
+        Route::get('/details', 'PassportController@details');
+        Route::post('/update', 'PassportController@update');
+    });
 
-  Route::get('/details/{userId}', 'UsersController@details');
-  Route::get('/details', 'PassportController@details');
-  Route::post('/update', 'PassportController@update');
-
-  Route::get('/search/{page}/{perPage}', 'UsersController@searchUsersPaginate');
-  Route::get('/search', 'UsersController@searchUsers');
+    Route::get('/search/{page}/{perPage}', 'UsersController@searchUsersPaginate');
+    Route::get('/search', 'UsersController@searchUsers');
 });
 
 Route::prefix('chinchilla')->group(function () {

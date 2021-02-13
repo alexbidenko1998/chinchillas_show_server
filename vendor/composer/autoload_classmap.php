@@ -17,6 +17,7 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\PassportController' => $baseDir . '/app/Http/Controllers/PassportController.php',
     'App\\Http\\Controllers\\PhotosController' => $baseDir . '/app/Http/Controllers/PhotosController.php',
+    'App\\Http\\Controllers\\SiteController' => $baseDir . '/app/Http/Controllers/SiteController.php',
     'App\\Http\\Controllers\\UsersController' => $baseDir . '/app/Http/Controllers/UsersController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
     'App\\Http\\Middleware\\AdminMiddleware' => $baseDir . '/app/Http/Middleware/AdminMiddleware.php',
