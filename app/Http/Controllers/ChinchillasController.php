@@ -89,16 +89,19 @@ class ChinchillasController extends Controller
 
     public function getChinchillaDetails($chinchilla_id)
     {
-        return Chinchilla::with('color')
+        $chinchilla = Chinchilla::with('color')
             ->with('avatar')
             ->with('photos')
             ->with('statuses')
             ->with('colorComments')
+            ->with('breeder')
             ->with(request()->header('Country-Code') == 'RU' ? 'owner' : 'owner:id')
             ->find($chinchilla_id)
             ->append('children')
             ->append('relatives')
             ->withParents();
+        $chinchilla->breeder->makeHidden(['email', 'phone']);
+        return $chinchilla;
     }
 
     public function getUserChinchillas($user_id, Request $request)

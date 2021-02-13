@@ -97,6 +97,11 @@ class Chinchilla extends Model
         return $this->hasOne('App\User', 'id', 'owner_id');
     }
 
+    public function breeder()
+    {
+        return $this->hasOne('App\User', 'id', 'breeder_id');
+    }
+
     public function colorComments()
     {
         return $this->hasMany('App\ChinchillaColorComment')->orderBy('timestamp', 'desc');
