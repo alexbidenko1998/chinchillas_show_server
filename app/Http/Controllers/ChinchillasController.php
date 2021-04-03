@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Chinchilla;
 use App\Color;
+use App\Price;
 use App\Status;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 
 class ChinchillasController extends Controller
 {
@@ -87,7 +89,7 @@ class ChinchillasController extends Controller
         return Color::updateOrCreate(['chinchilla_id' => $chinchilla_id], $color);
     }
 
-    public function getChinchillaDetails($chinchilla_id)
+    public function getChinchillaDetails($chinchilla_id, Request $request)
     {
         $chinchilla = Chinchilla::with('color')
             ->with('avatar')
@@ -95,12 +97,23 @@ class ChinchillasController extends Controller
             ->with('statuses')
             ->with('colorComments')
             ->with('breeder')
+            ->with('priceRub')
+            ->with('priceEur')
             ->with(request()->header('Country-Code') == 'RU' ? 'owner' : 'owner:id')
             ->find($chinchilla_id)
             ->append('children')
             ->append('relatives')
             ->withParents();
-        if (!is_null($chinchilla->breeder)) $chinchilla->breeder->makeHidden(['email', 'phone']);
+        if (!is_null($chinchilla->breeder)) {
+            $chinchilla->breeder->makeHidden(['email', 'phone']);
+        }
+        $chinchilla->statuses->each(function (Status $status) use ($request) {
+            $status->append('prices');
+            $status->prices->filter(function ($item) use ($request) {
+                return in_array($request->user('api')->type, ['admin', 'moderator'])
+                    || $item->user_id === $request->user('api')->id;
+            });
+        });
         return $chinchilla;
     }
 
@@ -156,12 +169,30 @@ class ChinchillasController extends Controller
         $request->validate([
             'name' => ['required', 'string'],
             'chinchillaId' => ['required', 'exists:chinchillas,id'],
+            'prices' => [Rule::requiredIf($request->name == 'sale')],
+            'prices.*.currency' => ['required', Rule::in('RUB', 'EUR', 'USD')],
+            'prices.*.value' => ['required', 'numeric'],
         ]);
-        return Status::create([
+
+        $status = Status::create([
             'name' => $request->name,
             'timestamp' => time() * 1000,
             'chinchilla_id' => $request->chinchillaId,
         ]);
+        if (isset($request->prices)) {
+            foreach ($request->prices as $price) {
+                Price::create([
+                    'currency' => $price['currency'],
+                    'value' => $price['value'],
+                    'status_id' => $status->id,
+                    'chinchilla_id' => $request->chinchillaId,
+                    'timestamp' => $status->timestamp,
+                    'user_id' => $request->user()->id,
+                ]);
+            }
+        }
+        $status->append('prices');
+        return $status;
     }
 
     public function colorForOvervalue($id, Request $request)

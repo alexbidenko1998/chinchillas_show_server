@@ -18,10 +18,20 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Status whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Status whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Status whereTimestamp($value)
+ * @property-read \App\Price|null $priceEur
+ * @property-read \App\Price|null $priceRub
+ * @property-read \App\Price|null $priceUSD
+ * @property-read mixed $prices
+ * @property-read \App\Price|null $priceUsd
  */
 class Status extends Model
 {
     protected $fillable = ['name', 'timestamp', 'chinchilla_id'];
 
     public $timestamps = false;
+
+    public function getPricesAttribute()
+    {
+        return Price::where('timestamp', $this->timestamp)->get();
+    }
 }

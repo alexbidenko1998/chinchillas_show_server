@@ -55,6 +55,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\ChinchillaColorComment[] $colorComments
  * @property-read int|null $color_comments_count
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereConclusion($value)
+ * @property string|null $breeder_type
+ * @property-read \App\User|null $breeder
+ * @property-read \App\User|null $owner
+ * @method static \Illuminate\Database\Eloquent\Builder|Chinchilla whereBreederType($value)
  */
 class Chinchilla extends Model
 {
@@ -107,24 +111,32 @@ class Chinchilla extends Model
         return $this->hasMany('App\ChinchillaColorComment')->orderBy('timestamp', 'desc');
     }
 
-    public function getChildrenAttribute() {
+    public function getChildrenAttribute()
+    {
         return Chinchilla::with('avatar')
             ->where('father_id', $this->id)->orWhere('mother_id', $this->id)->get();
     }
 
-    public function getMotherAttribute() {
+    public function getMotherAttribute()
+    {
         $chinchilla = Chinchilla::with('avatar')->find($this->mother_id);
-        if (isset($chinchilla)) $chinchilla->withParents($this->parentCount);
+        if (isset($chinchilla)) {
+            $chinchilla->withParents($this->parentCount);
+        }
         return $chinchilla;
     }
 
-    public function getFatherAttribute() {
+    public function getFatherAttribute()
+    {
         $chinchilla = Chinchilla::with('avatar')->find($this->father_id);
-        if (isset($chinchilla)) $chinchilla->withParents($this->parentCount);
+        if (isset($chinchilla)) {
+            $chinchilla->withParents($this->parentCount);
+        }
         return $chinchilla;
     }
 
-    public function getRelativesAttribute() {
+    public function getRelativesAttribute()
+    {
         return Chinchilla::with('avatar')
             ->where(function ($query) {
                 $query->orWhereIn('father_id', [$this->father_id, $this->mother_id])
@@ -134,13 +146,32 @@ class Chinchilla extends Model
             ->get();
     }
 
-    public function withParents($parentCount = 0) {
+    public function withParents($parentCount = 0)
+    {
         $this->parentCount = $parentCount + 1;
-        if ($this->parentCount < 4) $this->append(['mother', 'father']);
+        if ($this->parentCount < 4) {
+            $this->append(['mother', 'father']);
+        }
         return $this;
     }
 
-    public function statuses() {
+    public function statuses()
+    {
         return $this->hasMany('App\Status', 'chinchilla_id', 'id')->orderBy('timestamp', 'desc');
+    }
+
+    public function prices()
+    {
+        return $this->hasMany('App\Price', 'chinchilla_id', 'id')->orderBy('timestamp', 'desc');
+    }
+
+    public function priceRub()
+    {
+        return $this->hasOne('App\Price', 'chinchilla_id', 'id')->where('currency', 'RUB')->latest('timestamp');
+    }
+
+    public function priceEur()
+    {
+        return $this->hasOne('App\Price', 'chinchilla_id', 'id')->where('currency', 'EUR')->latest('timestamp');
     }
 }
