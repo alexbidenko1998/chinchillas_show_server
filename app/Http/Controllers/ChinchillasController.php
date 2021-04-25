@@ -123,9 +123,9 @@ class ChinchillasController extends Controller
     {
         $query = Chinchilla::whereOwnerId($user_id)->with('color')->with('avatar')->with('status');
         if ($user_id !== $request->user()->id) {
-            $query = $query::where('conclusion', '<>', 'not_check');
+            $query = $query->where('conclusion', '<>', 'not_check');
         }
-        return $query::get();
+        return $query->get();
     }
 
     public function searchChinchillas(Request $request)

@@ -17,10 +17,10 @@ class UsersController extends Controller
     {
         $searcher = User::query();
         if ($request->query('login')) {
-            $searcher::where('login', 'like', $request->query('login'));
+            $searcher->where('login', 'like', $request->query('login'));
         }
         if ($request->query('q')) {
-            $searcher::where(function ($query) use ($request) {
+            $searcher->where(function ($query) use ($request) {
                 $query->orWhere('login', 'like', $request->query('q'))
                 ->orWhere('first_name', 'like', $request->query('q'))
                 ->orWhere('last_name', 'like', $request->query('q'))
@@ -28,9 +28,9 @@ class UsersController extends Controller
             });
         }
         if ($perPage === 0) {
-            return $searcher::get()->makeHidden(['email', 'phone']);
+            return $searcher->get()->makeHidden(['email', 'phone']);
         }
-        return $searcher::forPage($page, $perPage)->get()->makeHidden(['email', 'phone']);
+        return $searcher->forPage($page, $perPage)->get()->makeHidden(['email', 'phone']);
     }
 
     public function details($userId)

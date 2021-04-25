@@ -106,7 +106,7 @@ class PassportController extends Controller
         return $user;
     }
 
-    function resetPassword($email, Request $request)
+    public function resetPassword($email, Request $request)
     {
         User::whereEmail($email)->update([
             'password' => bcrypt($request->password),
