@@ -44,7 +44,7 @@ class PhotosController extends Controller
             ->delete('chinchillas/' . $chinchilla->owner_id . '/' . $chinchilla->id . '/' . $photo->name);
         $photo->forceDelete();
 
-        if ($chinchilla->avatar_id === $photo_id) {
+        if ($chinchilla->avatar_id === (int) $photo_id) {
             $chinchilla->avatar_id = null;
             $chinchilla->save();
         }

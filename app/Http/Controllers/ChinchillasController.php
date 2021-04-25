@@ -122,7 +122,7 @@ class ChinchillasController extends Controller
     public function getUserChinchillas($user_id, Request $request)
     {
         $query = Chinchilla::whereOwnerId($user_id)->with('color')->with('avatar')->with('status');
-        if ($user_id !== $request->user()->id) {
+        if ((int) $user_id !== $request->user()->id) {
             $query = $query->where('conclusion', '<>', 'not_check');
         }
         return $query->get();
