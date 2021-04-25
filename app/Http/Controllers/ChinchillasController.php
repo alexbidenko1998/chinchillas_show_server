@@ -62,7 +62,9 @@ class ChinchillasController extends Controller
             'awards' => ['sometimes', 'nullable', 'string'],
             'description' => ['sometimes', 'nullable', 'string'],
         ]);
-        Chinchilla::whereId($chinchilla_id)->update($data);
+        $chinchilla = Chinchilla::whereId($chinchilla_id);
+        $chinchilla->update($data);
+        return $chinchilla;
     }
 
     public function addColor($chinchilla_id, Request $request)
@@ -99,8 +101,8 @@ class ChinchillasController extends Controller
             ->with('breeder')
             ->with('priceRub')
             ->with('priceEur')
-            ->with(request()->header('Country-Code') == 'RU' ? 'owner' : 'owner:id')
-            ->find($chinchilla_id)
+            ->with(request()->header('Country-Code') === 'RU' ? 'owner' : 'owner:id')
+            ->findOrFail($chinchilla_id)
             ->append('children')
             ->append('relatives')
             ->withParents();
@@ -120,10 +122,10 @@ class ChinchillasController extends Controller
     public function getUserChinchillas($user_id, Request $request)
     {
         $query = Chinchilla::whereOwnerId($user_id)->with('color')->with('avatar')->with('status');
-        if ($user_id != $request->user()->id) {
-            $query = $query->where('conclusion', '<>', 'not_check');
+        if ($user_id !== $request->user()->id) {
+            $query = $query::where('conclusion', '<>', 'not_check');
         }
-        return $query->get();
+        return $query::get();
     }
 
     public function searchChinchillas(Request $request)
@@ -139,9 +141,7 @@ class ChinchillasController extends Controller
         if (isset($params['is_owner'])) {
             $isOwner = $params['is_owner'];
         }
-        unset($params['page']);
-        unset($params['perPage']);
-        unset($params['is_owner']);
+        unset($params['page'], $params['perPage'], $params['is_owner']);
         foreach ($params as $key => $value) {
             $search = $search->where($key, 'like', "%{$value}%");
         }
@@ -155,7 +155,7 @@ class ChinchillasController extends Controller
                 $query->where('statuses.name', 'sale');
             });
         }
-        if (isset($page) && isset($perPage)) {
+        if (isset($page, $perPage)) {
             $search = $search->forPage($params['page'], $params['perPage']);
         }
         return response()->json([
@@ -169,7 +169,7 @@ class ChinchillasController extends Controller
         $request->validate([
             'name' => ['required', 'string'],
             'chinchillaId' => ['required', 'exists:chinchillas,id'],
-            'prices' => [Rule::requiredIf($request->name == 'sale')],
+            'prices' => [Rule::requiredIf($request->name === 'sale')],
             'prices.*.currency' => ['required', Rule::in('RUB', 'EUR', 'USD')],
             'prices.*.value' => ['required', 'numeric'],
         ]);
@@ -179,7 +179,7 @@ class ChinchillasController extends Controller
             'timestamp' => time() * 1000,
             'chinchilla_id' => $request->chinchillaId,
         ]);
-        if (isset($request->prices)) {
+        if ($request->__isset('prices')) {
             foreach ($request->prices as $price) {
                 Price::create([
                     'currency' => $price['currency'],

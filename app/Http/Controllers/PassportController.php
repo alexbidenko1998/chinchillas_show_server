@@ -96,8 +96,9 @@ class PassportController extends Controller
         }
 
         $user = User::find(auth()->user()->id);
-        if ($user->avatar)
+        if ($user->avatar) {
             Storage::disk('public_photos')->delete('users/' . auth()->user()->id . '/' . $user->avatar);
+        }
         foreach ($data as $key => $value) {
             $user->{$key} = $value;
         }
@@ -105,7 +106,8 @@ class PassportController extends Controller
         return $user;
     }
 
-    function resetPassword($email, Request $request) {
+    function resetPassword($email, Request $request)
+    {
         User::whereEmail($email)->update([
             'password' => bcrypt($request->password),
         ]);

@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    function getUsers(Request $request) {
+    public function getUsers(Request $request)
+    {
         $page = $request->page ?? 1;
 
         return response()->json([
@@ -19,7 +20,8 @@ class AdminController extends Controller
         ]);
     }
 
-    function updateUser($id, Request $request) {
+    public function updateUser($id, Request $request)
+    {
         $request->validate([
             'type' => ['sometimes', 'nullable', 'string'],
             'admitted' => ['sometimes', 'nullable', 'boolean'],
@@ -29,7 +31,8 @@ class AdminController extends Controller
         return $user;
     }
 
-    function getChinchillas($page, $perPage) {
+    public function getChinchillas($page, $perPage)
+    {
         $search = Chinchilla::with('color')->with('avatar')->with('photos')->with('colorComments');
         $search = $search->where('conclusion', 'not_check')->where('is_ready', true)->forPage($page, $perPage);
         return response()->json([
@@ -40,7 +43,8 @@ class AdminController extends Controller
         ]);
     }
 
-    function updateChinchilla($id, Request $request) {
+    public function updateChinchilla($id, Request $request)
+    {
         $request->validate([
             'conclusion' => ['sometimes', 'nullable', 'string'],
         ]);
@@ -49,7 +53,8 @@ class AdminController extends Controller
         return $chinchilla;
     }
 
-    function createColorComment(Request $request) {
+    public function createColorComment(Request $request)
+    {
         $request->validate([
             'content' => ['required', 'string'],
             'chinchillaId' => ['required', 'exists:chinchillas,id']

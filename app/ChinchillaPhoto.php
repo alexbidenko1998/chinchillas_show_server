@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,13 +12,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property int $chinchilla_id
  * @property string $name
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereChinchillaId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereId($value)
- * @mixin \Eloquent
+ * @method static Builder|Chinchilla newModelQuery()
+ * @method static Builder|Chinchilla newQuery()
+ * @method static Builder|Chinchilla query()
+ * @method static Builder|Chinchilla whereChinchillaId($value)
+ * @method static Builder|Chinchilla whereName($value)
+ * @method static Builder|Chinchilla whereId($value)
+ * @mixin Eloquent
  */
 class ChinchillaPhoto extends Model
 {

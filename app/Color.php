@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,28 +27,28 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $german
  * @property string|null $blue
  * @property string|null $fur
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereAngora($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereBeige($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereBlue($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereCalifornia($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereChinchillaId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereEbony($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereFur($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereGerman($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereLova($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereMosaic($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color wherePearl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereRex($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereSapphire($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereStandard($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereVelvet($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereViolet($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Color whereWhite($value)
- * @mixin \Eloquent
+ * @method static Builder|Color newModelQuery()
+ * @method static Builder|Color newQuery()
+ * @method static Builder|Color query()
+ * @method static Builder|Color whereAngora($value)
+ * @method static Builder|Color whereBeige($value)
+ * @method static Builder|Color whereBlue($value)
+ * @method static Builder|Color whereCalifornia($value)
+ * @method static Builder|Color whereChinchillaId($value)
+ * @method static Builder|Color whereEbony($value)
+ * @method static Builder|Color whereFur($value)
+ * @method static Builder|Color whereGerman($value)
+ * @method static Builder|Color whereId($value)
+ * @method static Builder|Color whereLova($value)
+ * @method static Builder|Color whereMosaic($value)
+ * @method static Builder|Color wherePearl($value)
+ * @method static Builder|Color whereRex($value)
+ * @method static Builder|Color whereSapphire($value)
+ * @method static Builder|Color whereStandard($value)
+ * @method static Builder|Color whereVelvet($value)
+ * @method static Builder|Color whereViolet($value)
+ * @method static Builder|Color whereWhite($value)
+ * @mixin Eloquent
  */
 class Color extends Model
 {

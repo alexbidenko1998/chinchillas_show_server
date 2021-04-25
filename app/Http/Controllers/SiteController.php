@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 
 class SiteController extends Controller
 {
-    function statistics() {
+    public function statistics()
+    {
         return [
             'totalChinchillas' => Chinchilla::count(),
             'totalUsers' => User::count(),

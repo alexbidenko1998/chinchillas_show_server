@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,8 +46,8 @@ Route::prefix('chinchilla')->group(function () {
 
 Route::middleware('auth:api')->prefix('photo')->group(function () {
 
-  Route::post('/chinchilla/{chinchilla_id}', 'PhotosController@upload');
-  Route::delete('/chinchilla/{photo_id}', 'PhotosController@delete');
+    Route::post('/chinchilla/{chinchilla_id}', 'PhotosController@upload');
+    Route::delete('/chinchilla/{photo_id}', 'PhotosController@delete');
 });
 
 Route::middleware(['auth:api', AdminMiddleware::class])->prefix('admin')->group(function () {

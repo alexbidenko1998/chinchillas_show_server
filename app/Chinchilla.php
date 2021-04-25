@@ -2,6 +2,9 @@
 
 namespace App;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,47 +21,47 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $brothers
  * @property string|null $awards
  * @property string|null $description
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereOwnerId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereAwards($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereBirthday($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereBreederId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereBrothers($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereIsReady($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereSex($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereWeight($value)
- * @mixin \Eloquent
+ * @method static Builder|Chinchilla newModelQuery()
+ * @method static Builder|Chinchilla newQuery()
+ * @method static Builder|Chinchilla query()
+ * @method static Builder|Chinchilla whereOwnerId($value)
+ * @method static Builder|Chinchilla whereAwards($value)
+ * @method static Builder|Chinchilla whereBirthday($value)
+ * @method static Builder|Chinchilla whereBreederId($value)
+ * @method static Builder|Chinchilla whereBrothers($value)
+ * @method static Builder|Chinchilla whereDescription($value)
+ * @method static Builder|Chinchilla whereId($value)
+ * @method static Builder|Chinchilla whereIsReady($value)
+ * @method static Builder|Chinchilla whereSex($value)
+ * @method static Builder|Chinchilla whereStatus($value)
+ * @method static Builder|Chinchilla whereWeight($value)
+ * @mixin Eloquent
  * @property string $name
  * @property int|null $avatar_id
  * @property int|null $mother_id
  * @property int|null $father_id
- * @property-read \App\ChinchillaPhoto|null $avatar
- * @property-read \App\Color|null $color
+ * @property-read ChinchillaPhoto|null $avatar
+ * @property-read Color|null $color
  * @property-read mixed $children
  * @property-read mixed $father
  * @property-read mixed $mother
  * @property-read mixed $relatives
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\ChinchillaPhoto[] $photos
+ * @property-read Collection|ChinchillaPhoto[] $photos
  * @property-read int|null $photos_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Status[] $statuses
+ * @property-read Collection|Status[] $statuses
  * @property-read int|null $statuses_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereAvatarId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereFatherId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereMotherId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereName($value)
+ * @method static Builder|Chinchilla whereAvatarId($value)
+ * @method static Builder|Chinchilla whereFatherId($value)
+ * @method static Builder|Chinchilla whereMotherId($value)
+ * @method static Builder|Chinchilla whereName($value)
  * @property string $conclusion
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\ChinchillaColorComment[] $colorComments
+ * @property-read Collection|ChinchillaColorComment[] $colorComments
  * @property-read int|null $color_comments_count
- * @method static \Illuminate\Database\Eloquent\Builder|\App\Chinchilla whereConclusion($value)
+ * @method static Builder|Chinchilla whereConclusion($value)
  * @property string|null $breeder_type
- * @property-read \App\User|null $breeder
- * @property-read \App\User|null $owner
- * @method static \Illuminate\Database\Eloquent\Builder|Chinchilla whereBreederType($value)
+ * @property-read User|null $breeder
+ * @property-read User|null $owner
+ * @method static Builder|Chinchilla whereBreederType($value)
  */
 class Chinchilla extends Model
 {
@@ -78,48 +81,48 @@ class Chinchilla extends Model
 
     public function color()
     {
-        return $this->hasOne('App\Color');
+        return $this->hasOne(Color::class);
     }
 
     public function avatar()
     {
-        return $this->hasOne('App\ChinchillaPhoto', 'id', 'avatar_id');
+        return $this->hasOne(ChinchillaPhoto::class, 'id', 'avatar_id');
     }
 
     public function photos()
     {
-        return $this->hasMany('App\ChinchillaPhoto');
+        return $this->hasMany(ChinchillaPhoto::class);
     }
 
     public function status()
     {
-        return $this->hasOne('App\Status')->latest('timestamp');
+        return $this->hasOne(Status::class)->latest('timestamp');
     }
 
     public function owner()
     {
-        return $this->hasOne('App\User', 'id', 'owner_id');
+        return $this->hasOne(User::class, 'id', 'owner_id');
     }
 
     public function breeder()
     {
-        return $this->hasOne('App\User', 'id', 'breeder_id');
+        return $this->hasOne(User::class, 'id', 'breeder_id');
     }
 
     public function colorComments()
     {
-        return $this->hasMany('App\ChinchillaColorComment')->orderBy('timestamp', 'desc');
+        return $this->hasMany(ChinchillaColorComment::class)->orderBy('timestamp', 'desc');
     }
 
     public function getChildrenAttribute()
     {
-        return Chinchilla::with('avatar')
+        return self::with('avatar')
             ->where('father_id', $this->id)->orWhere('mother_id', $this->id)->get();
     }
 
     public function getMotherAttribute()
     {
-        $chinchilla = Chinchilla::with('avatar')->find($this->mother_id);
+        $chinchilla = self::with('avatar')->with('color')->find($this->mother_id);
         if (isset($chinchilla)) {
             $chinchilla->withParents($this->parentCount);
         }
@@ -128,7 +131,7 @@ class Chinchilla extends Model
 
     public function getFatherAttribute()
     {
-        $chinchilla = Chinchilla::with('avatar')->find($this->father_id);
+        $chinchilla = self::with('avatar')->with('color')->find($this->father_id);
         if (isset($chinchilla)) {
             $chinchilla->withParents($this->parentCount);
         }
@@ -137,7 +140,7 @@ class Chinchilla extends Model
 
     public function getRelativesAttribute()
     {
-        return Chinchilla::with('avatar')
+        return self::with('avatar')
             ->where(function ($query) {
                 $query->orWhereIn('father_id', [$this->father_id, $this->mother_id])
                     ->orWhereIn('mother_id', [$this->father_id, $this->mother_id]);
@@ -157,21 +160,21 @@ class Chinchilla extends Model
 
     public function statuses()
     {
-        return $this->hasMany('App\Status', 'chinchilla_id', 'id')->orderBy('timestamp', 'desc');
+        return $this->hasMany(Status::class, 'chinchilla_id', 'id')->orderBy('timestamp', 'desc');
     }
 
     public function prices()
     {
-        return $this->hasMany('App\Price', 'chinchilla_id', 'id')->orderBy('timestamp', 'desc');
+        return $this->hasMany(Price::class, 'chinchilla_id', 'id')->orderBy('timestamp', 'desc');
     }
 
     public function priceRub()
     {
-        return $this->hasOne('App\Price', 'chinchilla_id', 'id')->where('currency', 'RUB')->latest('timestamp');
+        return $this->hasOne(Price::class, 'chinchilla_id', 'id')->where('currency', 'RUB')->latest('timestamp');
     }
 
     public function priceEur()
     {
-        return $this->hasOne('App\Price', 'chinchilla_id', 'id')->where('currency', 'EUR')->latest('timestamp');
+        return $this->hasOne(Price::class, 'chinchilla_id', 'id')->where('currency', 'EUR')->latest('timestamp');
     }
 }

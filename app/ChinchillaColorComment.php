@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -11,14 +13,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $timestamp
  * @property string $content
  * @property int $chinchilla_id
- * @method static \Illuminate\Database\Eloquent\Builder|\App\ChinchillaColorComment newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\ChinchillaColorComment newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\ChinchillaColorComment query()
- * @method static \Illuminate\Database\Eloquent\Builder|\App\ChinchillaColorComment whereChinchillaId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\ChinchillaColorComment whereContent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\ChinchillaColorComment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|\App\ChinchillaColorComment whereTimestamp($value)
- * @mixin \Eloquent
+ * @method static Builder|ChinchillaColorComment newModelQuery()
+ * @method static Builder|ChinchillaColorComment newQuery()
+ * @method static Builder|ChinchillaColorComment query()
+ * @method static Builder|ChinchillaColorComment whereChinchillaId($value)
+ * @method static Builder|ChinchillaColorComment whereContent($value)
+ * @method static Builder|ChinchillaColorComment whereId($value)
+ * @method static Builder|ChinchillaColorComment whereTimestamp($value)
+ * @mixin Eloquent
  */
 class ChinchillaColorComment extends Model
 {
