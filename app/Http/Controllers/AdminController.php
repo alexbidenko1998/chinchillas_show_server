@@ -33,7 +33,7 @@ class AdminController extends Controller
 
     public function getChinchillas($page, $perPage)
     {
-        $search = Chinchilla::with('color')->with('avatar')->with('photos')->with('colorComments');
+        $search = Chinchilla::with('color')->with('avatar')->with('photos')->with('colorComments')->with('owner');
         $search = $search->where('conclusion', 'not_check')->where('is_ready', true)->forPage($page, $perPage);
         return response()->json([
             'data' => $search->get()->map(function (Chinchilla $chinchilla) {

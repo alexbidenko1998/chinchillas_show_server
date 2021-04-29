@@ -35,6 +35,6 @@ class UsersController extends Controller
 
     public function details($userId)
     {
-        return response()->json(User::find($userId));
+        return User::find($userId);
     }
 }

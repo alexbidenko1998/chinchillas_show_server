@@ -64,7 +64,7 @@ class ChinchillasController extends Controller
         ]);
         $chinchilla = Chinchilla::whereId($chinchilla_id);
         $chinchilla->update($data);
-        return $chinchilla;
+        return $chinchilla->toJson();
     }
 
     public function addColor($chinchilla_id, Request $request)
