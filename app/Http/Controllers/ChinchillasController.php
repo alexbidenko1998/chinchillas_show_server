@@ -130,8 +130,10 @@ class ChinchillasController extends Controller
 
     public function searchChinchillas(Request $request)
     {
-        $search = Chinchilla::with('color')->with('avatar')->with('status');
         $params = $request->all();
+        $search = Chinchilla::with('color')->with('avatar')->with('status')->with(['statuses' => function ($query) {
+            return $query->limit(1);
+        }]);
         if (isset($params['page'])) {
             $page = $params['page'];
         }
@@ -143,7 +145,14 @@ class ChinchillasController extends Controller
         }
         unset($params['page'], $params['perPage'], $params['is_owner']);
         foreach ($params as $key => $value) {
-            $search = $search->where($key, 'like', "%{$value}%");
+            if (in_array($key, ['sex'])) {
+                $search = $search->where($key, 'like', "%$value%");
+            }
+            if ($key === 'status') {
+                $search = $search->whereHas('statuses', function ($query) use ($value) {
+                    return $query->where('name', $value)->limit(1);
+                });
+            }
         }
         if (isset($isOwner) && $request->user('api') !== null) {
             $search = $search->where('owner_id', $request->user('api')->id);
