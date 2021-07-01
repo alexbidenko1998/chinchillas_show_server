@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Price extends Model
 {
-    protected $fillable = ['currency', 'value', 'status_id', 'timestamp', 'user_id'];
+    protected $fillable = ['currency', 'value', 'status_id', 'timestamp', 'user_id', 'chinchilla_id'];
 
     public $timestamps = false;
 
