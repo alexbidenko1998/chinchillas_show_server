@@ -6,6 +6,7 @@ use App\Chinchilla;
 use App\Color;
 use App\Price;
 use App\Status;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
@@ -134,9 +135,9 @@ class ChinchillasController extends Controller
     public function searchChinchillas(Request $request)
     {
         $params = $request->all();
-        $search = Chinchilla::with('color')->with('avatar')->with('status')->with(['statuses' => function ($query) {
-            return $query->limit(1);
-        }]);
+        $search = Chinchilla::with('color')
+            ->with('avatar')
+            ->with('status');
         if (isset($params['page'])) {
             $page = $params['page'];
         }
@@ -152,8 +153,8 @@ class ChinchillasController extends Controller
                 $search = $search->where($key, 'like', "%$value%");
             }
             if ($key === 'status') {
-                $search = $search->whereHas('statuses', function ($query) use ($value) {
-                    return $query->where('name', $value)->limit(1);
+                $search = $search->whereHas('status', function ($query) use ($value) {
+                    return $query->where('status.name', $value);
                 });
             }
         }
