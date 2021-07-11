@@ -152,11 +152,11 @@ class ChinchillasController extends Controller
             if (in_array($key, ['sex'])) {
                 $search = $search->where($key, 'like', "%$value%");
             }
-            if ($key === 'status') {
-                $search = $search->whereHas('statuses', function (Builder $query) use ($value) {
-                    return $query->latest('timestamp')->get()->where('name', $value);
-                });
-            }
+//            if ($key === 'status') {
+//                $search = $search->whereHas('status', function (Builder $query) use ($value) {
+//                    return $query->where('name', $value);
+//                });
+//            }
         }
         if (isset($isOwner) && $request->user('api') !== null) {
             $search = $search->where('owner_id', $request->user('api')->id);
@@ -172,9 +172,17 @@ class ChinchillasController extends Controller
         if (isset($page, $perPage)) {
             $search = $search->forPage($params['page'], $params['perPage']);
         }
+        $result = $search->get()->filter(function ($item) use ($params) {
+            foreach ($params as $key => $value) {
+                if ($key === 'status') {
+                    return $item->name === $value;
+                }
+            }
+            return true;
+        });
         return response()->json([
-            'data' => $search->get(),
-            'total' => $search->count(),
+            'data' => $result,
+            'total' => $result->count(),
         ]);
     }
 
