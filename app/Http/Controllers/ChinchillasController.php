@@ -154,7 +154,7 @@ class ChinchillasController extends Controller
             }
             if ($key === 'status') {
                 $search = $search->whereHas('status', function ($query) use ($value) {
-                    return $query->where('status.name', $value);
+                    return $query->where('name', $value);
                 });
             }
         }
@@ -163,11 +163,11 @@ class ChinchillasController extends Controller
         } else {
             $search = $search->where('conclusion', '<>', 'not_check');
         }
-        if ($request->user('api') === null) {
-            $search = $search->whereHas('status', function ($query) {
-                $query->where('statuses.name', 'sale');
-            });
-        }
+//        if ($request->user('api') === null) {
+//            $search = $search->whereHas('statuses', function ($query) {
+//                $query->where('statuses.name', 'sale');
+//            });
+//        }
         $search = $search->where('owner_id', '<>', 2);
         if (isset($page, $perPage)) {
             $search = $search->forPage($params['page'], $params['perPage']);
