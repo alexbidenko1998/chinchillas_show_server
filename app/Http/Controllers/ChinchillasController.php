@@ -153,8 +153,8 @@ class ChinchillasController extends Controller
                 $search = $search->where($key, 'like', "%$value%");
             }
             if ($key === 'status') {
-                $search = $search->whereHas('status', function ($query) use ($value) {
-                    return $query->where('name', $value);
+                $search = $search->whereHas('statuses', function ($query) use ($value) {
+                    return $query->latest('timestamp')->where('name', $value);
                 });
             }
         }
