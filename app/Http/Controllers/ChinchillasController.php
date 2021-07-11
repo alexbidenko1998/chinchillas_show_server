@@ -167,6 +167,7 @@ class ChinchillasController extends Controller
                 $query->where('statuses.name', 'sale');
             });
         }
+        $search = $search->where('owner_id', '<>', 2);
         if (isset($page, $perPage)) {
             $search = $search->forPage($params['page'], $params['perPage']);
         }
