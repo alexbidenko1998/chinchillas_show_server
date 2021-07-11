@@ -112,8 +112,11 @@ class ChinchillasController extends Controller
         $chinchilla->statuses->each(function (Status $status) use ($request) {
             $status->append('prices');
             $status->prices->filter(function ($item) use ($request) {
-                return in_array($request->user('api')->type, ['admin', 'moderator'])
-                    || $item->user_id === $request->user('api')->id;
+                return !is_null($request->user('api'))
+                    && (
+                        in_array($request->user('api')->type, ['admin', 'moderator'])
+                        || $item->user_id === $request->user('api')->id
+                    );
             });
         });
         return $chinchilla;
@@ -207,7 +210,7 @@ class ChinchillasController extends Controller
     public function colorForOvervalue($id, Request $request)
     {
         $chinchilla = Chinchilla::findOrFail($id);
-        if ($chinchilla->owner_id != $request->user()->id) {
+        if ($chinchilla->owner_id !== $request->user()->id) {
             abort(Response::HTTP_FORBIDDEN);
         }
         $chinchilla->conclusion = 'overvalue';
