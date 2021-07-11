@@ -175,7 +175,7 @@ class ChinchillasController extends Controller
         $result = $search->get()->filter(function ($item) use ($params) {
             foreach ($params as $key => $value) {
                 if ($key === 'status') {
-                    return $item->name === $value;
+                    return $item->status->name === $value;
                 }
             }
             return true;
