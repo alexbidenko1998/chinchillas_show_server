@@ -164,7 +164,7 @@ class ChinchillasController extends Controller
             $search = $search->where('conclusion', '<>', 'not_check');
         }
         if ($request->user('api') === null) {
-            $search = $search->whereHas('statuses', function ($query) {
+            $search = $search->whereHas('status', function ($query) {
                 $query->where('statuses.name', 'sale');
             });
         }
